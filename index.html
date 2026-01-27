@@ -3,15 +3,50 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Texas Utilities — Temperature · Postal · Police</title>
+  <title>Travel the World</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="container">
-    <h1>Texas Utilities — Temp · Postal · Police</h1>
+    <h1>Travel the World</h1>
+    
+    <section class="card travel">
+      <h2>Where do you want to travel to?</h2>
+      <div class="row centered-buttons">
+        <button id="randomLocBtn">Show Random Location</button>
+        <button id="randomLocAgainBtn">Another</button>
+      </div>
+      <div id="unsplashNote" class="note"></div>
+      <div id="randomLocResult" class="result">
+        <div id="randomLocLoading" style="display:none">Loading…</div>
+        <a id="randomLocLink" href="#" target="_blank" style="display:none">
+          <img id="randomLocImg" src="" alt="Random location" style="max-width:100%;height:auto;margin-top:8px;display:block">
+        </a>
+        <div id="randomLocAddress" style="margin-top:8px"></div>
+        <div id="randomLocAttr" style="margin-top:6px;font-size:0.9em;color:#555"></div>
+      </div>
+    </section>
 
     <section class="card">
-      <h2>Temperature Converter (C → F)</h2>
+      <!-- Embedded four-seasons SVG (primary, guaranteed to display) -->
+      <svg id="convertHeaderImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid slice" style="width:100%;max-width:900px;max-height:240px;height:auto;display:block;margin:0 auto;object-fit:cover;margin-bottom:8px;">
+        <defs>
+          <style>
+            .label { font-family: Arial, sans-serif; font-size:28px; font-weight:700 }
+          </style>
+        </defs>
+        <rect width="225" height="240" x="0" y="0" fill="#7fc97f"/>
+        <rect width="225" height="240" x="225" y="0" fill="#ffd92f"/>
+        <rect width="225" height="240" x="450" y="0" fill="#fd8d3c"/>
+        <rect width="225" height="240" x="675" y="0" fill="#80b1d3"/>
+        <text x="112.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Spring</text>
+        <text x="337.5" y="130" text-anchor="middle" fill="#333333" class="label">Summer</text>
+        <text x="562.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Autumn</text>
+        <text x="787.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Winter</text>
+      </svg>
+      <div id="convertHeaderImgStatus" style="text-align:center;font-size:0.9em;color:#666;margin-top:6px;margin-bottom:6px"></div>
+      <h2>Look Ahead at the Weather before you pack.  
+        You may need to convert the temperature. (C → F)</h2>
       <div class="row">
         <input id="celsius" type="number" placeholder="Celsius" step="any">
         <button id="convertBtn">Convert</button>
@@ -20,36 +55,62 @@
     </section>
 
     <section class="card">
-      <h2>Postal Codes</h2>
+      <!-- Embedded metric→standard header graphic -->
+      <svg id="metricHeaderImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet" style="width:90%;max-width:700px;max-height:140px;height:auto;display:block;margin-left:auto;margin-right:auto;margin-bottom:8px;">
+        <defs>
+          <style>.label{font-family:Arial, sans-serif;font-size:20px;font-weight:700}</style>
+        </defs>
+        <rect width="900" height="140" fill="#f4f6f8"/>
+        <g transform="translate(18,16)">
+          <rect width="120" height="108" rx="8" fill="#e8f5e9"/>
+          <text x="60" y="62" text-anchor="middle" fill="#2e7d32" class="label">m → ft</text>
+        </g>
+        <g transform="translate(180,16)">
+          <rect width="120" height="108" rx="8" fill="#fff3e0"/>
+          <text x="60" y="62" text-anchor="middle" fill="#ef6c00" class="label">km → mi</text>
+        </g>
+        <g transform="translate(342,16)">
+          <rect width="120" height="108" rx="8" fill="#e3f2fd"/>
+          <text x="60" y="62" text-anchor="middle" fill="#0277bd" class="label">cm → in</text>
+        </g>
+        <g transform="translate(504,16)">
+          <rect width="120" height="108" rx="8" fill="#fce4ec"/>
+          <text x="60" y="62" text-anchor="middle" fill="#ad1457" class="label">kg → lb</text>
+        </g>
+        <g transform="translate(666,16)">
+          <rect width="120" height="108" rx="8" fill="#f3e5f5"/>
+          <text x="60" y="62" text-anchor="middle" fill="#6a1b9a" class="label">l → gal</text>
+        </g>
+      </svg>
+      <h2>Not every place uses the same units of measurement.  
+        You may need to convert units. (Metric → Standard)</h2>
       <div class="row">
-        <input id="cityPostal" type="text" placeholder="City name (e.g., Austin)">
-        <button id="postalCityBtn">Get by City</button>
+        <input id="metricValue" type="number" placeholder="Value" step="any">
+        <select id="metricType">
+          <option value="m_to_ft">Meters → Feet</option>
+          <option value="km_to_mi">Kilometers → Miles</option>
+          <option value="cm_to_in">Centimeters → Inches</option>
+          <option value="kg_to_lb">Kilograms → Pounds</option>
+          <option value="g_to_oz">Grams → Ounces</option>
+          <option value="l_to_gal">Liters → Gallons (US)</option>
+        </select>
+        <button id="convertMetricBtn">Convert</button>
       </div>
-      <div class="row">
-        <input id="latPostal" type="number" placeholder="Latitude" step="any">
-        <input id="lonPostal" type="number" placeholder="Longitude" step="any">
-        <button id="postalCoordBtn">Get by Coordinates</button>
-      </div>
-      <div id="postalResult" class="result"></div>
+      <div id="metricResult" class="result"></div>
     </section>
 
-    <section class="card">
-      <h2>Police Station</h2>
-      <div class="row">
-        <input id="cityPolice" type="text" placeholder="City name (e.g., Austin)">
-        <button id="policeCityBtn">Get by City</button>
-      </div>
-      <div class="row">
-        <input id="latPolice" type="number" placeholder="Latitude" step="any">
-        <input id="lonPolice" type="number" placeholder="Longitude" step="any">
-        <button id="policeCoordBtn">Get by Coordinates</button>
-      </div>
-      <div id="policeResult" class="result"></div>
-    </section>
+    <!-- Postal Codes removed -->
 
-    <footer class="foot">Static demo — uses embedded sample Texas data.</footer>
+    
+
+    
+
+    
+
+    <footer class="foot"></footer>
   </main>
 
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

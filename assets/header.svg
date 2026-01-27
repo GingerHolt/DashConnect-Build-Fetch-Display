@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <style>
+      .label { font-family: Arial, sans-serif; font-size:28px; font-weight:700 }
+    </style>
+  </defs>
+  <rect width="225" height="240" x="0" y="0" fill="#7fc97f"/>
+  <rect width="225" height="240" x="225" y="0" fill="#ffd92f"/>
+  <rect width="225" height="240" x="450" y="0" fill="#fd8d3c"/>
+  <rect width="225" height="240" x="675" y="0" fill="#80b1d3"/>
+  <text x="112.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Spring</text>
+  <text x="337.5" y="130" text-anchor="middle" fill="#333333" class="label">Summer</text>
+  <text x="562.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Autumn</text>
+  <text x="787.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Winter</text>
+</svg>
