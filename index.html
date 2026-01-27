@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Texas Utilities — Temperature · Postal · Police</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Texas Utilities — Temp · Postal · Police</h1>
+
+    <section class="card">
+      <h2>Temperature Converter (C → F)</h2>
+      <div class="row">
+        <input id="celsius" type="number" placeholder="Celsius" step="any">
+        <button id="convertBtn">Convert</button>
+      </div>
+      <div id="convertResult" class="result"></div>
+    </section>
+
+    <section class="card">
+      <h2>Postal Codes</h2>
+      <div class="row">
+        <input id="cityPostal" type="text" placeholder="City name (e.g., Austin)">
+        <button id="postalCityBtn">Get by City</button>
+      </div>
+      <div class="row">
+        <input id="latPostal" type="number" placeholder="Latitude" step="any">
+        <input id="lonPostal" type="number" placeholder="Longitude" step="any">
+        <button id="postalCoordBtn">Get by Coordinates</button>
+      </div>
+      <div id="postalResult" class="result"></div>
+    </section>
+
+    <section class="card">
+      <h2>Police Station</h2>
+      <div class="row">
+        <input id="cityPolice" type="text" placeholder="City name (e.g., Austin)">
+        <button id="policeCityBtn">Get by City</button>
+      </div>
+      <div class="row">
+        <input id="latPolice" type="number" placeholder="Latitude" step="any">
+        <input id="lonPolice" type="number" placeholder="Longitude" step="any">
+        <button id="policeCoordBtn">Get by Coordinates</button>
+      </div>
+      <div id="policeResult" class="result"></div>
+    </section>
+
+    <footer class="foot">Static demo — uses embedded sample Texas data.</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
