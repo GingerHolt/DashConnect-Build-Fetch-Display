@@ -11,6 +11,7 @@ if (convertBtn) {
     if (out) {
       if (Number.isFinite(c)) {
         const f = c * 9/5 + 32;
+        // display result with 2 decimal places
         out.textContent = `${c} °C = ${f.toFixed(2)} °F`;
       } 
       // handle empty input
