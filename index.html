@@ -4,19 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Travel the World</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css"><!-- Link to main CSS file -->
 </head>
 <body>
+  <!-- Main container -->
   <main class="container">
-    <h1>Travel the World</h1>
+    <h1>Travel the World</h1><!-- Main heading -->
     
+    <!-- Travel section to show random locations -->
     <section class="card travel">
-      <h2>Where do you want to travel to?</h2>
+      <h2>Where in the world do you want to go?</h2>
       <div class="row centered-buttons">
+        <!-- Buttons to show random location and another random location -->
         <button id="randomLocBtn">Show Random Location</button>
         <button id="randomLocAgainBtn">Another</button>
       </div>
-      <div id="unsplashNote" class="note"></div>
+        <!-- Result container for random location -->
       <div id="randomLocResult" class="result">
         <div id="randomLocLoading" style="display:none">Loading…</div>
         <a id="randomLocLink" href="#" target="_blank" style="display:none">
@@ -25,8 +28,9 @@
         <div id="randomLocAddress" style="margin-top:8px"></div>
         <div id="randomLocAttr" style="margin-top:6px;font-size:0.9em;color:#555"></div>
       </div>
-    </section>
+    </section><!-- End travel section -->
 
+    <!-- Temperature conversion section -->
     <section class="card">
       <!-- Embedded four-seasons SVG (primary, guaranteed to display) -->
       <svg id="convertHeaderImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid slice" style="width:100%;max-width:900px;max-height:240px;height:auto;display:block;margin:0 auto;object-fit:cover;margin-bottom:8px;">
@@ -44,16 +48,23 @@
         <text x="562.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Autumn</text>
         <text x="787.5" y="130" text-anchor="middle" fill="#ffffff" class="label">Winter</text>
       </svg>
-      <div id="convertHeaderImgStatus" style="text-align:center;font-size:0.9em;color:#666;margin-top:6px;margin-bottom:6px"></div>
+      <!--End Embedded four-seasons SVG -->
+      
+      <!-- Temperature conversion UI -->
+      <!-- status element removed -->
       <h2>Look Ahead at the Weather before you pack.  
         You may need to convert the temperature. (C → F)</h2>
-      <div class="row">
+        <!-- Temperature input and convert button -->
+        <div class="row">
         <input id="celsius" type="number" placeholder="Celsius" step="any">
         <button id="convertBtn">Convert</button>
       </div>
+      <!-- Result container for temperature conversion -->
       <div id="convertResult" class="result"></div>
     </section>
+    <!-- End temperature conversion section -->
 
+    <!-- Metric to Standard conversion section -->
     <section class="card">
       <!-- Embedded metric→standard header graphic -->
       <svg id="metricHeaderImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 140" preserveAspectRatio="xMidYMid meet" style="width:90%;max-width:700px;max-height:140px;height:auto;display:block;margin-left:auto;margin-right:auto;margin-bottom:8px;">
@@ -82,10 +93,15 @@
           <text x="60" y="62" text-anchor="middle" fill="#6a1b9a" class="label">l → gal</text>
         </g>
       </svg>
+      <!-- End embedded metric→standard header graphic -->
+
+      <!-- Metric to Standard conversion UI -->
       <h2>Not every place uses the same units of measurement.  
         You may need to convert units. (Metric → Standard)</h2>
-      <div class="row">
+      <!-- Metric to Standard input and convert button -->
+        <div class="row">
         <input id="metricValue" type="number" placeholder="Value" step="any">
+        <!-- Dropdown for metric type -->
         <select id="metricType">
           <option value="m_to_ft">Meters → Feet</option>
           <option value="km_to_mi">Kilometers → Miles</option>
@@ -94,23 +110,19 @@
           <option value="g_to_oz">Grams → Ounces</option>
           <option value="l_to_gal">Liters → Gallons (US)</option>
         </select>
+        <!-- Convert button -->
         <button id="convertMetricBtn">Convert</button>
       </div>
+      <!-- Result container for Metric to Standard conversion -->
       <div id="metricResult" class="result"></div>
     </section>
-
-    <!-- Postal Codes removed -->
-
-    
-
-    
-
-    
+    <!-- End metric to standard conversion section -->
 
     <footer class="foot"></footer>
   </main>
+  <!-- End main container -->
 
-  <script src="config.js"></script>
+  <!-- Link to main JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>

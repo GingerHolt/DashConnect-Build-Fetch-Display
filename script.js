@@ -1,25 +1,33 @@
-// Temperature
+// Celsius to Fahrenheit conversion
+// Use the document.getElementById to get input and output elements
 const convertBtn = document.getElementById('convertBtn');
+//Use if to check if the button exists before adding event listener
 if (convertBtn) {
-  convertBtn.addEventListener('click', () => {
-    const cEl = document.getElementById('celsius');
-    const out = document.getElementById('convertResult');
-    const c = cEl ? parseFloat(cEl.value) : NaN;
+  convertBtn.addEventListener('click', () => { // on click
+    const cEl = document.getElementById('celsius'); // get input element
+    const out = document.getElementById('convertResult'); // get output element
+    const c = cEl ? parseFloat(cEl.value) : NaN; // interpret input value as float
+    // if output element exists, perform conversion and display result
     if (out) {
       if (Number.isFinite(c)) {
         const f = c * 9/5 + 32;
         out.textContent = `${c} °C = ${f.toFixed(2)} °F`;
-      } else {
+      } 
+      // handle empty input
+      else {
         out.textContent = 'Please enter a Celsius value.';
       }
     }
   });
-}
+} // END Celsius to Fahrenheit conversion
 
-// Metric -> Standard conversions
+// Metric to Standard conversion function that returns 
+// an object with output value and unit
 function convertMetric(value, type) {
   const v = Number(value);
+  // validate numeric input
   if (!Number.isFinite(v)) return null;
+  // perform conversion based on type
   switch (type) {
     case 'm_to_ft': return { out: v * 3.28084, unit: 'ft' };
     case 'km_to_mi': return { out: v * 0.621371, unit: 'mi' };
@@ -31,101 +39,49 @@ function convertMetric(value, type) {
   }
 }
 
+// Metric to Standard conversion user interface, UI
+// get elements and add event listener to button
 const convertMetricBtn = document.getElementById('convertMetricBtn');
+// check if button exists before adding event listener
 if (convertMetricBtn) {
-  convertMetricBtn.addEventListener('click', () => {
-    const valEl = document.getElementById('metricValue');
-    const typeEl = document.getElementById('metricType');
-    const out = document.getElementById('metricResult');
-    const val = valEl ? parseFloat(valEl.value) : NaN;
-    const type = typeEl ? typeEl.value : null;
-    if (!out) return;
-    if (!Number.isFinite(val)) { out.textContent = 'Enter a numeric value.'; return; }
-    const res = convertMetric(val, type);
+  convertMetricBtn.addEventListener('click', () => { // on click
+    const valEl = document.getElementById('metricValue'); // input element
+    const typeEl = document.getElementById('metricType'); // type dropdown
+    const out = document.getElementById('metricResult'); // output element
+    const val = valEl ? parseFloat(valEl.value) : NaN; // interpret input value
+    const type = typeEl ? typeEl.value : null; // get selected type
+    // validate output element
+    if (!out) return; // nothing to do if no output element
+    // validate numeric input
+    if (!Number.isFinite(val)) { out.textContent = 'Enter a numeric value.'; return; } // invalid input
+    // perform conversion
+    const res = convertMetric(val, type); // get conversion result
+    // display result or error
     if (!res) { out.textContent = 'Unknown conversion.'; return; }
     out.textContent = `${val} -> ${res.out.toFixed(4)} ${res.unit}`;
   });
-}
+} // END Metric to Standard conversion UI
 
-// Show API config status in the UI (hidden when no key present)
-const unsplashNoteEl = document.getElementById('unsplashNote');
-if (unsplashNoteEl) {
-  const key = window.UNSPLASH_ACCESS_KEY;
-  if (!key || key.startsWith('REPLACE')) {
-    // hide the note when no API key is provided
-    unsplashNoteEl.style.display = 'none';
-  } else {
-    unsplashNoteEl.textContent = 'API key configured — showing only photos that include a named location.';
-    unsplashNoteEl.style.display = 'block';
-  }
-}
 
 // Load local curated places list (places.json) if present
-let LOCAL_PLACES = [];
-fetch('places.json').then(r => {
-  if (!r.ok) throw new Error('no local places');
-  return r.json();
-}).then(data => {
-  if (Array.isArray(data) && data.length) LOCAL_PLACES = data;
-}).catch(() => {
-  LOCAL_PLACES = [];
+let LOCAL_PLACES = []; // will hold local places if loaded
+fetch('places.json').then(r => { // attempt to fetch local places file
+  if (!r.ok) throw new Error('no local places'); // handle fetch error
+  return r.json();  // interpret response as JSON
+}).then(data => { // process JSON data
+  if (Array.isArray(data) && data.length) LOCAL_PLACES = data; // store places if valid
+}).catch(() => { // handle errors
+  LOCAL_PLACES = [];  // reset to empty if error occurs
 });
 
-// Random Location Photo + Address
-function randomLatLon() {
-  // Worldwide random lat/lon
-  const lat = (Math.random() * 180) - 90;
-  const lon = (Math.random() * 360) - 180;
-  return [lat, lon];
-}
-
-async function reverseGeocode(lat, lon) {
-  try {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error('Reverse geocode failed', err);
-    return null;
-  }
-}
-
-// Format a reverse-geocode result into a concise, human-readable label
-function formatReverseGeocode(rev) {
-  if (!rev) return null;
-  const a = rev.address || {};
-  const parts = [];
-  if (a.city) parts.push(a.city);
-  else if (a.town) parts.push(a.town);
-  else if (a.village) parts.push(a.village);
-  else if (a.hamlet) parts.push(a.hamlet);
-  if (a.state) parts.push(a.state);
-  if (a.country) parts.push(a.country);
-  if (parts.length) return parts.join(', ');
-  return rev.display_name || null;
-}
-
-function getPhotoLocationLabel(photo) {
-  if (!photo || !photo.location) return null;
-  const loc = photo.location;
-  if (loc.title) return loc.title;
-  if (loc.name) return loc.name;
-  if (loc.city) return loc.city;
-  if (loc.town) return loc.town;
-  if (loc.region) return loc.region;
-  if (loc.country) return loc.country;
-  return null;
-}
-
-// Strip HTML tags from a string
-function stripHtml(html) {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, '').trim();
+// function to strip HTML tags from a string to get plain text
+function stripHtml(html) { // simple regex-based HTML tag removal
+  if (!html) return ''; // handle empty input
+  return html.replace(/<[^>]*>/g, '').trim(); // remove tags and trim whitespace
 }
 
 // Look for a readable label in Commons extmetadata fields
+// function returns the first suitable label found or null
 function extractCommonsLabel(ext) {
   if (!ext) return null;
   const fields = ['ObjectName', 'ImageDescription', 'ImageDescriptionURL', 'Credit', 'Artist', 'Credit', 'UsageTerms', 'Caption', 'Headline', 'Location'];
@@ -195,49 +151,21 @@ async function fetchCommonsImageForQuery(query, maxResults = 5) {
   return null;
 }
 
-async function fetchRandomUnsplashPhotoWithLocation(maxAttempts = 16) {
-  // Only accept Unsplash photos that include an explicit location label
-  const key = window.UNSPLASH_ACCESS_KEY;
-  if (!key || key.startsWith('REPLACE')) return null;
-  // Broader worldwide queries to surface varied locations
-  const queries = ['landscape','cityscape','street','architecture','monument','landmark','harbor','beach','mountain','village','town','park','square','market','temple','church','mosque','ruins','scenic'];
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    try {
-      const q = queries[Math.floor(Math.random() * queries.length)];
-      const url = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(q)}&orientation=landscape`;
-      const res = await fetch(url, { headers: { Authorization: `Client-ID ${key}` } });
-      if (!res.ok) {
-        console.warn('Unsplash random failed', res.status);
-        continue;
-      }
-      const photo = await res.json();
-      if (!photo) continue;
-
-      // Require an explicit metadata label from Unsplash (title/name/city/etc.)
-      const metaLabel = getPhotoLocationLabel(photo);
-      if (metaLabel) return { photo, label: metaLabel };
-
-      // No metadata label — skip this photo and continue searching.
-    } catch (err) {
-      console.error('Error fetching Unsplash random photo', err);
-    }
-  }
-  // No labelled photo found after retries
-  return null;
-}
-
+// Show a random location image and info in the UI
+// use async function to wait for fetch calls
 async function showRandomLocation() {
+  // use getElementById to get user interface elements
   const loading = document.getElementById('randomLocLoading');
   const link = document.getElementById('randomLocLink');
   const img = document.getElementById('randomLocImg');
   const addr = document.getElementById('randomLocAddress');
   const attr = document.getElementById('randomLocAttr');
 
-  loading.style.display = 'block';
-  link.style.display = 'none';
-  img.style.display = 'none';
-  addr.textContent = '';
-  attr.textContent = '';
+  loading.style.display = 'block';// show loading indicator
+  link.style.display = 'none'; // hide link initially
+  img.style.display = 'none'; // hide image initially
+  addr.textContent = ''; // clear address text
+  attr.textContent = ''; // clear attribution text
 
   // If a local curated places list is available, use it (preferred)
   if (Array.isArray(LOCAL_PLACES) && LOCAL_PLACES.length > 0) {
@@ -278,41 +206,10 @@ async function showRandomLocation() {
     }
   }
 
-  const key = window.UNSPLASH_ACCESS_KEY;
-
-  // If an API key is configured, prefer the provider that requires it.
-  if (key && !key.startsWith('REPLACE')) {
-    const photoResult = await fetchRandomUnsplashPhotoWithLocation();
-    if (photoResult) {
-      const { photo, label } = photoResult;
-      img.onload = () => {
-        loading.style.display = 'none';
-        link.href = photo.links && photo.links.html ? photo.links.html : img.src;
-        link.style.display = 'block';
-        img.style.display = 'block';
-      };
-      img.onerror = (e) => { console.error('Image load error', e); loading.style.display = 'none'; };
-      img.src = photo.urls && (photo.urls.regular || photo.urls.full || photo.urls.small);
-      if (label) addr.textContent = `Location: ${label}`;
-      if (photo.user) {
-        const name = photo.user.name || photo.user.username;
-        const profile = photo.user.links && photo.user.links.html ? photo.user.links.html : '#';
-        attr.innerHTML = `Photo: <a href="${profile}" target="_blank">${name}</a> (Source)`;
-      }
-      return;
-    }
-
-    // No labelled photo found from the provider — show a message.
-    loading.style.display = 'none';
-    link.style.display = 'none';
-    img.style.display = 'none';
-    addr.textContent = 'No labelled photos found. Try again.';
-    attr.textContent = '';
-    return;
-  }
-
   // No API key — try Wikimedia Commons (no key required)
+  // use await to wait for the fetch to complete
   const commons = await fetchRandomCommonsPhotoWithLocation();
+  // If we got a Commons image with location, display it
   if (commons) {
     img.onload = () => {
       loading.style.display = 'none';
@@ -341,79 +238,8 @@ async function showRandomLocation() {
   img.src = picUrl;
 }
 
+// Set up event listeners for random location buttons
 const randomLocBtn = document.getElementById('randomLocBtn');
 if (randomLocBtn) randomLocBtn.addEventListener('click', () => showRandomLocation());
 const randomLocAgainBtn = document.getElementById('randomLocAgainBtn');
 if (randomLocAgainBtn) randomLocAgainBtn.addEventListener('click', () => showRandomLocation());
-
-// Ensure the convert header image is centered and has a robust fallback if the Bing short URL is blocked
-(function setupConvertHeaderFallback(){
-  const img = document.getElementById('convertHeaderImg');
-  const statusEl = document.getElementById('convertHeaderImgStatus');
-  if (!img) return;
-  // If the header element is an inline SVG (embedded), skip external-image fallback logic
-  if (img.tagName && img.tagName.toLowerCase && img.tagName.toLowerCase() !== 'img') {
-    if (statusEl) statusEl.textContent = '';
-    return;
-  }
-  // enforce centering in case styles are overridden
-  img.style.marginLeft = 'auto';
-  img.style.marginRight = 'auto';
-
-  let attempts = 0;
-  function tryFallback() {
-    attempts += 1;
-    console.warn('convertHeaderImg load attempt', attempts);
-    if (statusEl) statusEl.textContent = `Attempt ${attempts}: trying alternative image...`;
-    if (attempts === 1) {
-      // try cache-busted original (sometimes helps bypass cached 403)
-      img.src = 'https://source.unsplash.com/900x240/?four-seasons,season,weather&cb=' + Date.now();
-      if (statusEl) statusEl.innerHTML = `Trying original image (<a href="https://source.unsplash.com/900x240/?four-seasons,season,weather" target="_blank">open</a>)`;
-    } else if (attempts === 2) {
-      // try a reliable unsplash source as fallback
-      img.src = 'https://source.unsplash.com/900x240/?seasons,weather';
-      img.alt = 'Seasons image';
-      if (statusEl) statusEl.innerHTML = `Using fallback Unsplash image (<a href="https://source.unsplash.com/900x240/?seasons,weather" target="_blank">open</a>)`;
-    } else {
-      // final fallback: hide the image and show the inline SVG fallback
-      const svg = document.getElementById('convertHeaderSvg');
-      if (svg) {
-        svg.style.display = 'block';
-      }
-      img.style.display = 'none';
-      if (statusEl) statusEl.textContent = 'Header image unavailable — showing inline fallback';
-    }
-  }
-
-  img.addEventListener('error', () => {
-    tryFallback();
-  });
-
-  img.addEventListener('load', () => {
-    if (img.naturalWidth && statusEl) {
-      // Prefer to show the actual src link (original or fallback)
-      const srcLink = img.src && img.src.includes('source.unsplash.com') ? img.src : 'https://source.unsplash.com/900x240/?four-seasons,season,weather';
-      statusEl.innerHTML = `Loaded header image (<a href="${srcLink}" target="_blank">open</a>)`;
-    }
-    // hide inline svg fallback if present
-    const svg = document.getElementById('convertHeaderSvg');
-    if (svg) svg.style.display = 'none';
-  });
-
-  // If the image is already complete but has zero naturalWidth, trigger fallback
-  if (img.complete && img.naturalWidth === 0) {
-    if (statusEl) statusEl.textContent = 'Image failed to load — attempting fallback';
-    tryFallback();
-  }
-})();
-
-// Make the embedded SVG the primary header image (guaranteed available)
- (function useLocalHeader(){
-  const img = document.getElementById('convertHeaderImg');
-  const svg = document.getElementById('convertHeaderSvg');
-  const statusEl = document.getElementById('convertHeaderImgStatus');
-  if (!svg) return;
-  if (img) img.style.display = 'none';
-  svg.style.display = 'block';
-  if (statusEl) statusEl.textContent = '';
-})();
