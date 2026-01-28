@@ -3,7 +3,7 @@
 /* Global styles */
 *{box-sizing:border-box;font-family:Segoe UI,Roboto,Arial,sans-serif}
 /* Reset body margin and set background and text color */
-body{margin:0;background:var(--bg);color:#111}
+body{margin:0;background:rgb(173, 173, 222);color:#111}
 .container{max-width:840px;margin:32px auto;padding:16px}
 /* Headings styles */
 h1{margin:0 0 18px;font-size:2rem;font-weight:800;text-align:center}
@@ -13,14 +13,13 @@ h2{margin:0 0 12px;font-size:1.4rem;font-weight:700;text-align:center}
   h1{font-size:1.6rem}
 }
 /* Card component styles */
-.card{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 1px 4px rgba(12,20,40,0.06);margin-bottom:14px}
-.card.travel{background:#e8f5e9}
+.card{background:rgb(171, 219, 171);padding:16px;border-radius:8px;box-shadow:0 1px 4px rgba(12,20,40,0.06);margin-bottom:14px}
 /* Flexbox row styles */
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .centered-buttons{justify-content:center}
 /* Input and button styles */
 input[type=number],input[type=text]{padding:8px;border:1px solid #d6dce9;border-radius:6px;flex:1;min-width:150px}
-button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:12px;cursor:pointer}
 button:hover{opacity:.95}
 /* Image styles */
 .result{padding:8px;color:var(--muted)}
